@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TruckPulse - Tır ve Sürüş Dünyası</title>
+    <title>TruckPulse - Truck and Driving World</title>
     <style>
         :root {
             --bg-color-1: #08080c;
@@ -22,11 +22,11 @@
             background-color: var(--bg-color-1);
             background-image: linear-gradient(135deg, var(--bg-color-1) 0%, var(--bg-color-2) 100%);
             color: var(--text-color); line-height: 1.6; min-height: 100vh; overflow-x: hidden;
-            transition: background 0.3s; cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="%23ff4757" stroke="%23ffffff" stroke-width="2"/></svg>') 6 6, auto;
+            transition: background 0.3s; cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="%23ff4757" stroke="%23ffffff" stroke-width="2"/></svg>') 7 7, auto;
             background-size: cover; background-position: center; background-attachment: fixed;
         }
 
-        /* CRT Televizyon Efekti */
+        /* CRT TV Effect */
         body.crt-active::after {
             content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
@@ -59,12 +59,12 @@
         .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px; }
         .hamburger span { width: 25px; height: 3px; background: var(--text-color); border-radius: 3px; transition: 0.3s; }
 
-        .lang-btn, .music-btn, .game-tab-btn, .action-btn {
+        .music-btn, .game-tab-btn, .action-btn {
             background: #222; border: 1px solid var(--border-color); color: white;
             padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px;
             transition: all 0.2s; white-space: nowrap;
         }
-        .lang-btn:hover, .music-btn:hover, .game-tab-btn:hover, .action-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .music-btn:hover, .game-tab-btn:hover, .action-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
         
         .control-panel-mini { display: flex; align-items: center; gap: 6px; background: #16161c; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 12px; }
         .control-panel-mini input[type="color"] { background: none; border: none; width: 18px; height: 18px; cursor: pointer; border-radius: 4px; }
@@ -79,6 +79,34 @@
         }
         .hero h1 { font-size: 26px; margin-bottom: 8px; }
         .hero p { color: var(--text-muted); font-size: 14px; }
+
+        /* Cockpit Grid */
+        .cockpit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .cockpit-box {
+            background: rgba(18, 18, 24, 0.9); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px;
+            display: flex; flex-direction: column; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+        .cockpit-title { font-size: 14px; font-weight: bold; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
+
+        /* GPS Screen */
+        .gps-screen { background: #050508; border: 2px solid #222; border-radius: 8px; height: 110px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        #gpsCanvas { width: 100%; height: 100%; display: block; }
+        .gps-route-info { position: absolute; bottom: 5px; left: 8px; font-family: monospace; font-size: 10px; color: var(--green); background: rgba(0,0,0,0.6); padding: 2px 5px; border-radius: 3px; }
+
+        /* Speedometer */
+        .speedometer-display { text-align: center; font-family: monospace; padding: 5px; }
+        .speed-val { font-size: 28px; font-weight: 900; color: #fff; }
+        .speed-unit { font-size: 11px; color: var(--text-muted); }
+
+        /* Equalizer */
+        .visualizer-box { display: flex; align-items: flex-end; justify-content: space-between; height: 50px; background: #050508; border-radius: 6px; padding: 5px 10px; border: 1px solid #222; }
+        .viz-bar { width: 8px; background: var(--accent); border-radius: 3px; height: 3px; transition: height 0.08s ease; }
+
+        /* Notes Textarea */
+        .notes-textarea { width: 100%; height: 60px; background: #0a0a0f; border: 1px solid var(--border-color); color: #fff; border-radius: 6px; padding: 6px; font-size: 12px; resize: none; }
+
+        /* Logbook List */
+        .logbook-list { max-height: 80px; overflow-y: auto; font-size: 11px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; font-family: monospace; }
 
         .garage-section {
             background: rgba(18, 18, 24, 0.9); border: 1px solid var(--border-color); border-radius: 12px;
@@ -193,193 +221,220 @@
             </button>
             
             <nav class="nav-links" id="navLinks">
-                <a onclick="switchTab('videos'); toggleMobileMenu();" data-tr="Videolar" data-en="Videos">Videolar</a>
-                <a onclick="switchTab('games'); toggleMobileMenu();" data-tr="Minigames 🎮" data-en="Minigames 🎮">Minigames 🎮</a>
+                <a onclick="switchTab('videos'); toggleMobileMenu();">Videos</a>
+                <a onclick="switchTab('games'); toggleMobileMenu();">Minigames 🎮</a>
             </nav>
 
-            <div class="control-panel-mini" title="Arka Plan Rengi">
+            <div class="control-panel-mini" title="Background Color">
                 <span>🎨</span>
                 <input type="color" id="bgColor1" value="#08080c" onchange="updateBackgroundColors()">
                 <input type="color" id="bgColor2" value="#1a080c" onchange="updateBackgroundColors()">
             </div>
 
-            <select id="radioSelect" class="action-btn" onchange="changeRadioChannel(this.value)" title="Sürücü Radyosu">
-                <option value="off" data-tr="📻 Radyo: Kapalı" data-en="📻 Radio: Off">📻 Radyo: Kapalı</option>
-                <option value="phonk" data-tr="Phonk İstasyonu" data-en="Phonk Station">Phonk İstasyonu</option>
-                <option value="lofi" data-tr="Lo-Fi Kabin" data-en="Lo-Fi Cabin">Lo-Fi Kabin</option>
-                <option value="custom" data-tr="🎵 Yüklenen Müzik" data-en="🎵 Custom Music">🎵 Yüklenen Müzik</option>
+            <select id="radioSelect" class="action-btn" onchange="changeRadioChannel(this.value)" title="Driver Radio">
+                <option value="off">📻 Radio: Off</option>
+                <option value="lofi">Lo-Fi Cabin</option>
+                <option value="custom">🎵 Custom Music</option>
             </select>
 
-            <div class="control-panel-mini" title="Müzik Ses Seviyesi">
+            <div class="control-panel-mini" title="Volume">
                 <span>🔊</span>
-                <input type="range" id="volumeRange" min="0" max="1" step="0.05" value="0.7" oninput="changeVolume(this.value)" style="width: 60px; cursor:pointer;">
+                <input type="range" id="volumeRange" min="0" max="1" step="0.05" value="0.7" oninput="changeVolume(this.value)" style="width: 55px; cursor:pointer;">
             </div>
 
-            <button class="action-btn" onclick="toggleStrobe()" title="Çakar Lamba" data-tr="🚨 Çakar" data-en="🚨 Strobe">🚨 Çakar</button>
-            <button class="lang-btn" onclick="toggleLanguage()">EN / TR</button>
+            <button class="action-btn" onclick="toggleStrobe()" title="Strobe Light">🚨 Strobe</button>
         </div>
     </header>
 
     <div class="container">
         <div class="hero">
-            <h1 data-tr="Tır Kanalı ve Sürücü Merkezi" data-en="Truck Channel & Driver Hub">Tır Kanalı ve Sürücü Merkezi</h1>
-            <p data-tr="Son videoları izle veya mola verip mini oyunlar oyna!" data-en="Watch latest videos or take a break and play mini games!">Son videoları izle veya mola verip mini oyunlar oyna!</p>
+            <h1>Truck Channel & Driver Hub</h1>
+            <p>Watch latest videos or take a break and play mini games!</p>
         </div>
 
-        <!-- GARAJ & ÖZELLEŞTİRME -->
+        <div class="cockpit-grid">
+            <div class="cockpit-box">
+                <div class="cockpit-title"><span>🗺️ Smart Dynamic GPS</span> <span style="font-size:10px; color:var(--green);">ONLINE</span></div>
+                <div class="gps-screen">
+                    <canvas id="gpsCanvas"></canvas>
+                    <div class="gps-route-info" id="gpsRouteInfo">ROUTE: IZMIR -> EDIRNE</div>
+                </div>
+            </div>
+
+            <div class="cockpit-box">
+                <div class="cockpit-title"><span>⚡ Speed & Route</span> <span id="tripKm" style="font-size:11px; color:#fff;">0 km</span></div>
+                <div class="speedometer-display">
+                    <div class="speed-val" id="speedVal">88</div>
+                    <div class="speed-unit">KM/H (CRUISE)</div>
+                </div>
+            </div>
+
+            <div class="cockpit-box">
+                <div class="cockpit-title"><span>🎵 Audio Visualizer</span> <span id="vizStatus" style="font-size:10px; color:var(--text-muted);">OFF</span></div>
+                <div class="visualizer-box" id="visualizerBars">
+                    <div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div>
+                </div>
+            </div>
+
+            <div class="cockpit-box">
+                <div class="cockpit-title">
+                    <span>⛅ Weather & Road Mode</span>
+                    <span id="weatherIndicator" style="font-size:11px; color:var(--accent);">☀️ Sunny (Dry Road)</span>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); display:flex; flex-direction:column; gap:4px; font-family:monospace;">
+                    <div>Temperature: <span id="weatherTemp" style="color:#fff;">24°C</span></div>
+                    <div>Road Condition: <span id="roadCondition" style="color:var(--green);">Normal Asphalt</span></div>
+                    <div>Wipers: <span id="wiperStatus" style="color:var(--text-muted);">Off</span></div>
+                </div>
+            </div>
+
+            <div class="cockpit-box">
+                <div class="cockpit-title"><span>📝 Driver Notes</span></div>
+                <textarea id="driverNotes" class="notes-textarea" placeholder="Type your road notes here..." oninput="saveDriverNotes()"></textarea>
+            </div>
+
+            <div class="cockpit-box" style="grid-column: 1 / -1;">
+                <div class="cockpit-title"><span>📖 Realistic Driver Logbook</span></div>
+                <div class="logbook-list" id="logbookContainer">
+                    <div style="color: var(--green);">> Initializing travel record...</div>
+                </div>
+            </div>
+        </div>
+
         <div class="garage-section">
             <div>
-                <h3 style="font-size:15px; color:var(--accent); margin-bottom:4px;" data-tr="🛠️ Sürücü Garajı & Özelleştirme" data-en="🛠️ Driver Garage">🛠️ Sürücü Garajı & Özelleştirme</h3>
-                <p style="font-size:11px; color:var(--text-muted);" data-tr="Plakanı düzenle, arka plan resmi veya bilgisayardan müzik yükle." data-en="Customize plate, upload wallpaper or custom music.">Plakanı düzenle, arka plan resmi veya bilgisayardan müzik yükle.</p>
+                <h3 style="font-size:15px; color:var(--accent); margin-bottom:4px;">🛠️ Driver Garage & Customization</h3>
+                <p style="font-size:11px; color:var(--text-muted);">Edit your license plate, upload wallpaper or custom music.</p>
             </div>
             <div class="garage-inputs">
-                <input type="text" id="plateInput" placeholder="Plaka Yaz" maxlength="12">
-                <button class="action-btn" onclick="savePlate()" data-tr="Kaydet" data-en="Save">Kaydet</button>
+                <input type="text" id="plateInput" placeholder="Enter Plate" maxlength="12">
+                <button class="action-btn" onclick="savePlate()">Save</button>
                 
-                <label for="bgImageFile" class="action-btn" style="cursor:pointer;" data-tr="🖼️ Resim" data-en="🖼️ Image">🖼️ Resim</label>
+                <label for="bgImageFile" class="action-btn" style="cursor:pointer;">🖼️ Image</label>
                 <input type="file" id="bgImageFile" accept="image/*" style="display:none;" onchange="handleBgImageUpload(this)">
                 
-                <label for="customAudioFile" class="action-btn" style="cursor:pointer;" data-tr="🎵 Müzik Ekle" data-en="🎵 Add Music">🎵 Müzik Ekle</label>
+                <label for="customAudioFile" class="action-btn" style="cursor:pointer;">🎵 Add Music</label>
                 <input type="file" id="customAudioFile" accept="audio/*" style="display:none;" onchange="handleAudioUpload(this)">
 
-                <button class="action-btn" onclick="removeBgImage()" style="background:#c0392b;" data-tr="Kaldır" data-en="Remove">Kaldır</button>
+                <button class="action-btn" onclick="removeBgImage()" style="background:#c0392b;">Remove</button>
             </div>
         </div>
 
-        <!-- YAĞMUR / ATMOSFER AYARLARI -->
         <div class="garage-section" style="padding: 10px 15px;">
-            <div style="font-size:13px; font-weight:bold;" data-tr="🌧️ Yağmur & Atmosfer Efektleri" data-en="🌧️ Atmosphere Effects">🌧️ Yağmur & Atmosfer Efektleri</div>
+            <div style="font-size:13px; font-weight:bold;">🌧️ Mouse-Interactive Atmosphere Effects</div>
             <div class="garage-inputs">
-                <label style="font-size:11px;"><span data-tr="Mod:" data-en="Mode:">Mod:</span> 
+                <label style="font-size:11px;">Mode: 
                     <select id="atmosMode" onchange="changeAtmosMode(this.value)" class="action-btn" style="padding:3px;">
-                        <option value="dots" data-tr="Nokta Parçacık" data-en="Dot Particles">Nokta Parçacık</option>
-                        <option value="rain" data-tr="Yağmur Efekti" data-en="Rain Effect">Yağmur Efekti</option>
-                        <option value="matrix" data-tr="Matrix Kod" data-en="Matrix Code">Matrix Kod</option>
-                        <option value="snow" data-tr="Kar Tanesi" data-en="Snow Effect">Kar Tanesi</option>
-                        <option value="off" data-tr="Kapalı" data-en="Off">Kapalı</option>
+                        <option value="dots">Dot Particles</option>
+                        <option value="rain">Rain Effect</option>
+                        <option value="matrix">Matrix Code</option>
+                        <option value="snow">Snow Effect</option>
+                        <option value="off">Off</option>
                     </select>
                 </label>
-                <label style="font-size:11px;"><span data-tr="Hız:" data-en="Speed:">Hız:</span> <input type="range" id="speedRange" min="0.5" max="3" step="0.5" value="1" oninput="particleSpeed = parseFloat(this.value)"></label>
+                <label style="font-size:11px;">Speed: <input type="range" id="speedRange" min="0.5" max="3" step="0.5" value="1" oninput="particleSpeed = parseFloat(this.value)"></label>
             </div>
         </div>
 
-        <!-- KANALLAR -->
         <div class="channels-section">
-            <h2 data-tr="Kanallar ve Bağlantılar" data-en="Channels & Links">Kanallar ve Bağlantılar</h2>
+            <h2>Channels & Links</h2>
             <div class="channels-grid">
                 <a href="https://www.youtube.com/channel/UCM6EXLZFrqGu5Yd0gf1PCpg" target="_blank" class="channel-card">
                     <span class="icon">📺</span>
                     <h4>Renxc(MainAcc)</h4>
-                    <p data-tr="Ana YouTube Kanalı" data-en="Main YouTube Channel">Ana YouTube Kanalı</p>
+                    <p>Main YouTube Channel</p>
                 </a>
                 <a href="https://www.youtube.com/channel/UCMlwfGb4x0IwAzuNlxeLcZQ" target="_blank" class="channel-card">
                     <span class="icon">📊</span>
                     <h4>FluxTest(BenchMark)</h4>
-                    <p data-tr="Benchmark & Test Kanalı" data-en="Benchmark Channel">Benchmark & Test Kanalı</p>
+                    <p>Benchmark & Test Channel</p>
                 </a>
                 <a href="https://guns.lol/nyxven" target="_blank" class="channel-card">
                     <span class="icon">🔗</span>
                     <h4>Guns.lol / nyxven</h4>
-                    <p data-tr="Kişisel Bağlantı Hub" data-en="Personal Link Hub">Kişisel Bağlantı Hub</p>
+                    <p>Personal Link Hub</p>
                 </a>
                 <a href="https://www.tiktok.com/@nyxven.inc" target="_blank" class="channel-card">
                     <span class="icon">🎬</span>
                     <h4>TikTok @nyxven.inc</h4>
-                    <p data-tr="Kısa Video Paylaşımları" data-en="Short Videos">Kısa Video Paylaşımları</p>
+                    <p>Short Video Shares</p>
                 </a>
             </div>
         </div>
 
-        <!-- VİDEOLAR -->
         <section id="section-videos">
-            <h2 data-tr="Son 10 Video" data-en="Last 10 Videos">Son 10 Video</h2>
+            <h2>Last 10 Videos</h2>
             <div class="grid" id="youtube-grid">
-                <p style="color:var(--text-muted); grid-column:1/-1; text-align:center;" data-tr="Videolar yükleniyor..." data-en="Loading videos...">Videolar yükleniyor...</p>
+                <p style="color:var(--text-muted); grid-column:1/-1; text-align:center;">Loading videos...</p>
             </div>
         </section>
 
-        <!-- MİNİ OYUNLAR -->
         <section id="section-games" class="games-container" style="display:none;">
-            <h2 style="grid-column: 1/-1;" data-tr="Tırcı Dinlenme Tesisleri - Mini Oyunlar" data-en="Trucker Rest Area - Mini Games">Tırcı Dinlenme Tesisleri - Mini Oyunlar</h2>
+            <h2 style="grid-column: 1/-1;">Trucker Rest Area - Mini Games</h2>
             
             <div class="game-card">
-                <h3 data-tr="🛣️ Otoyol Tır Kaçış" data-en="🛣️ Highway Dodger">🛣️ Otoyol Tır Kaçış</h3>
-                <div class="game-score"><span data-tr="Skor:" data-en="Score:">Skor:</span> <span id="highwayScore">0</span></div>
+                <h3>🛣️ Highway Dodger</h3>
+                <div class="game-score">Score: <span id="highwayScore">0</span></div>
                 <canvas id="highwayCanvas" class="game-canvas" width="260" height="320"></canvas>
-                <button class="game-btn" onclick="startHighwayGame()" data-tr="Başlat / Yeniden" data-en="Start / Restart">Başlat</button>
+                <button class="game-btn" onclick="startHighwayGame()">Start / Restart</button>
             </div>
 
             <div class="game-card">
-                <h3 data-tr="🅿️ Engelli Park (R ile Dön)" data-en="🅿️ Precision Parking">🅿️ Engelli Park (R ile Dön)</h3>
-                <div class="game-score"><span data-tr="Seviye:" data-en="Level:">Seviye:</span> <span id="parkingLevel">1</span></div>
+                <h3>🅿️ Precision Parking (Rotate with R)</h3>
+                <div class="game-score">Level: <span id="parkingLevel">1</span></div>
                 <canvas id="parkingCanvas" class="game-canvas" width="260" height="320"></canvas>
-                <button class="game-btn" onclick="startParkingGame()" data-tr="Başlat / Sıfırla" data-en="Start / Reset">Başlat / Sıfırla</button>
+                <button class="game-btn" onclick="startParkingGame()">Start / Reset</button>
             </div>
 
             <div class="game-card">
-                <h3 data-tr="🚦 Trafik Işığı Refleksi" data-en="🚦 Traffic Light Reflex">🚦 Traffic Light Reflex</h3>
-                <div class="game-score" id="reflexStatus" data-tr="Yeşili Bekle..." data-en="Wait for Green...">Yeşili Bekle...</div>
+                <h3>🚦 Traffic Light Reflex</h3>
+                <div class="game-score" id="reflexStatus">Wait for Green...</div>
                 <canvas id="reflexCanvas" class="game-canvas" width="260" height="320"></canvas>
-                <button class="game-btn" onclick="handleReflexClick()" data-tr="ŞİMDİ BAS!" data-en="PRESS NOW!">BAS!</button>
+                <button class="game-btn" onclick="handleReflexClick()">PRESS NOW!</button>
             </div>
         </section>
 
-        <!-- TERMINAL -->
-        <div class="terminal-box" id="terminalLogs" data-tr="> TruckPulse v2.7 aktif. Sistemler hazır knk!" data-en="> TruckPulse v2.7 active. Systems ready bro!">
-            > TruckPulse v2.7 aktif. Sistemler hazır knk!
+        <div class="terminal-box" id="terminalLogs">
+            > TruckPulse v2.9 active. Cockpit & dynamic road systems online!
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 TruckPulse. <span data-tr="Tüm hakları saklıdır." data-en="All rights reserved.">Tüm hakları saklıdır.</span></p>
+        <p>&copy; 2026 TruckPulse. All rights reserved.</p>
     </footer>
 
     <script>
         const CHANNEL_ID = "UClEw9mpj18NkIAetNMA_DiA";
-        let currentLang = 'tr';
         let particleSpeed = 1;
         let atmosType = 'dots';
         let customAudioUrl = null;
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let totalKm = 0;
+
+        window.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
 
         const messages = {
-            tr: {
-                plateSaved: "Plaka başarıyla güncellendi knk! 🪪",
-                bgLoaded: "Arka plan resmi kaydedildi (F5'te gitmez)! 📺",
-                audioLoaded: "Özel müzik hafızaya kaydedildi ve radyoya eklendi! 🎵",
-                bgRemoved: "Arka plan resmi kaldırıldı.",
-                strobeToggle: "Çakar lambalar ayarlandı! 🚨",
-                truckRotated: "Tır döndürüldü! 🔄",
-                hitBarrier: "⚠️ Engele çarptın knk dikkat et!",
-                levelPass: "🏆 Helal lan! Parkı kaptın, sonraki seviye! 🎉",
-                parkStart: "Park oyunu başladı! R tuşuyla dönebilirsin.",
-                earlyReflex: "❌ Erken bastın lan, kırmızıdaydı!",
-                crashHighway: "💥 Kaza yaptın knk! Skorun: ",
-                radioOff: "Radyo kapatıldı.",
-                phonkOn: "Phonk İstasyonu yayında.",
-                lofiOn: "Lo-Fi Kabin yayında.",
-                customOn: "Yüklediğiniz özel müzik çalıyor."
-            },
-            en: {
-                plateSaved: "Plate successfully updated bro! 🪪",
-                bgLoaded: "Wallpaper saved (Persistent on F5)! 📺",
-                audioLoaded: "Custom music saved to storage and added to radio! 🎵",
-                bgRemoved: "Wallpaper removed.",
-                strobeToggle: "Strobe lights toggled! 🚨",
-                truckRotated: "Truck rotated! 🔄",
-                hitBarrier: "⚠️ You hit the barrier, watch out!",
-                levelPass: "🏆 Awesome! Parking cleared, next level! 🎉",
-                parkStart: "Parking game started! Press R to rotate.",
-                earlyReflex: "❌ Too early, it was red!",
-                crashHighway: "💥 You crashed! Your score: ",
-                radioOff: "Radio turned off.",
-                phonkOn: "Phonk Station streaming.",
-                lofiOn: "Lo-Fi Cabin streaming.",
-                customOn: "Custom uploaded music playing."
-            }
+            plateSaved: "License plate updated successfully bro! 🪪",
+            bgLoaded: "Wallpaper saved (Persistent on F5)! 📺",
+            audioLoaded: "Custom music saved to storage and added to radio! 🎵",
+            bgRemoved: "Wallpaper removed.",
+            strobeToggle: "Strobe lights toggled! 🚨",
+            truckRotated: "Truck rotated! 🔄",
+            hitBarrier: "⚠️ You hit the barrier, watch out!",
+            levelPass: "🏆 Awesome! Parking cleared, next level! 🎉",
+            parkStart: "Parking game started! Press R to rotate.",
+            earlyReflex: "❌ Too early, it was red!",
+            crashHighway: "💥 You crashed bro! Your score: ",
+            radioOff: "Radio turned off.",
+            lofiOn: "Lo-Fi Cabin streaming.",
+            customOn: "Custom uploaded music playing."
         };
 
         function showToast(key, extra = '') {
-            const text = (messages[currentLang][key] || key) + extra;
+            const text = (messages[key] || key) + extra;
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -457,25 +512,30 @@
 
         function changeRadioChannel(val) {
             const audio = document.getElementById('bg-audio');
+            const vizStatus = document.getElementById('vizStatus');
             if(val === 'off') {
                 audio.pause();
-                logTerminal(messages[currentLang]['radioOff']);
-            } else if(val === 'phonk') {
-                audio.src = "https://stream.zeno.fm/f3wvbb75fd8uv";
-                audio.play().catch(()=>{});
-                logTerminal(messages[currentLang]['phonkOn']);
+                vizStatus.innerText = "OFF";
+                vizStatus.style.color = "var(--text-muted)";
+                logTerminal(messages['radioOff']);
             } else if(val === 'lofi') {
                 audio.src = "https://stream.zeno.fm/0r0xa792kwzuv";
                 audio.play().catch(()=>{});
-                logTerminal(messages[currentLang]['lofiOn']);
+                vizStatus.innerText = "LIVE (RADIO)";
+                vizStatus.style.color = "var(--green)";
+                logTerminal(messages['lofiOn']);
             } else if(val === 'custom') {
                 if(customAudioUrl) {
                     audio.src = customAudioUrl;
                     audio.play().catch(()=>{});
-                    logTerminal(messages[currentLang]['customOn']);
+                    vizStatus.innerText = "LIVE (CUSTOM)";
+                    vizStatus.style.color = "var(--green)";
+                    logTerminal(messages['customOn']);
                 } else {
-                    alert(currentLang === 'tr' ? "Önce bilgisayardan müzik dosyası yüklemelisin!" : "You must upload a music file first!");
+                    alert("You must upload a music file first!");
                     document.getElementById('radioSelect').value = 'off';
+                    vizStatus.innerText = "OFF";
+                    vizStatus.style.color = "var(--text-muted)";
                 }
             }
         }
@@ -489,6 +549,11 @@
             document.getElementById('section-games').style.display = tab === 'games' ? 'grid' : 'none';
         }
 
+        function saveDriverNotes() {
+            const notes = document.getElementById('driverNotes').value;
+            localStorage.setItem('tp_driver_notes', notes);
+        }
+
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -496,13 +561,13 @@
         resizeCanvas();
 
         const particles = [];
-        for (let i = 0; i < 75; i++) {
+        for (let i = 0; i < 90; i++) {
             particles.push({ 
                 x: Math.random() * canvas.width, 
                 y: Math.random() * canvas.height, 
-                size: Math.random() * 2 + 1, 
+                size: Math.random() * 2 + 1.5, 
                 speedY: Math.random() * 2 + 1, 
-                length: Math.random() * 15 + 5,
+                length: Math.random() * 18 + 5,
                 char: String.fromCharCode(0x30A0 + Math.random() * 96)
             });
         }
@@ -517,30 +582,38 @@
                 ctx.strokeStyle = accentColor;
 
                 particles.forEach(p => {
+                    let dx = mouseX - p.x;
+                    let dy = mouseY - p.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        p.x += (dx / dist) * 0.8;
+                        p.y += (dy / dist) * 0.8;
+                    }
+
                     p.y += p.speedY * particleSpeed;
                     if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
                     
                     if (atmosType === 'dots') {
-                        ctx.globalAlpha = 0.4;
+                        ctx.globalAlpha = 0.5;
                         ctx.beginPath();
                         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                         ctx.fill();
                     } else if (atmosType === 'rain') {
-                        ctx.globalAlpha = 0.3;
+                        ctx.globalAlpha = 0.4;
                         ctx.lineWidth = 1.5;
                         ctx.beginPath();
                         ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p.x - 1, p.y + p.length);
+                        ctx.lineTo(p.x - 1.5, p.y + p.length);
                         ctx.stroke();
                     } else if (atmosType === 'matrix') {
-                        ctx.globalAlpha = 0.5;
-                        ctx.font = '12px monospace';
+                        ctx.globalAlpha = 0.6;
+                        ctx.font = '13px monospace';
                         ctx.fillText(p.char, p.x, p.y);
                         if(Math.random() < 0.1) p.char = String.fromCharCode(0x30A0 + Math.random() * 96);
                     } else if (atmosType === 'snow') {
-                        ctx.globalAlpha = 0.6;
+                        ctx.globalAlpha = 0.7;
                         ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size + 1, 0, Math.PI * 2);
+                        ctx.arc(p.x, p.y, p.size + 1.5, 0, Math.PI * 2);
                         ctx.fillStyle = '#ffffff';
                         ctx.fill();
                     }
@@ -549,6 +622,97 @@
             requestAnimationFrame(animateParticles);
         }
         animateParticles();
+
+        const gpsCanvas = document.getElementById('gpsCanvas');
+        const gpsCtx = gpsCanvas.getContext('2d');
+        let gpsProgress = 0;
+
+        function initGpsCanvas() {
+            gpsCanvas.width = gpsCanvas.parentElement.clientWidth;
+            gpsCanvas.height = gpsCanvas.parentElement.clientHeight - 20;
+        }
+        window.addEventListener('resize', initGpsCanvas);
+
+        function drawGpsMap() {
+            if (!gpsCanvas.width) initGpsCanvas();
+            gpsCtx.fillStyle = '#050508';
+            gpsCtx.fillRect(0, 0, gpsCanvas.width, gpsCanvas.height);
+
+            gpsCtx.strokeStyle = '#1a1a24';
+            gpsCtx.lineWidth = 10;
+            gpsCtx.lineCap = 'round';
+            gpsCtx.beginPath();
+            gpsCtx.moveTo(20, gpsCanvas.height / 2);
+            gpsCtx.bezierCurveTo(
+                gpsCanvas.width * 0.3, gpsCanvas.height * 0.1, 
+                gpsCanvas.width * 0.7, gpsCanvas.height * 0.9, 
+                gpsCanvas.width - 20, gpsCanvas.height / 2
+            );
+            gpsCtx.stroke();
+
+            gpsCtx.strokeStyle = '#2ed573';
+            gpsCtx.lineWidth = 4;
+            gpsCtx.stroke();
+
+            gpsProgress += 0.005;
+            if (gpsProgress > 1) gpsProgress = 0;
+
+            let t = gpsProgress;
+            let p0 = {x: 20, y: gpsCanvas.height / 2};
+            let p1 = {x: gpsCanvas.width * 0.3, y: gpsCanvas.height * 0.1};
+            let p2 = {x: gpsCanvas.width * 0.7, y: gpsCanvas.height * 0.9};
+            let p3 = {x: gpsCanvas.width - 20, y: gpsCanvas.height / 2};
+
+            let cx = Math.pow(1-t, 3) * p0.x + 3 * Math.pow(1-t, 2) * t * p1.x + 3 * (1-t) * Math.pow(t, 2) * p2.x + Math.pow(t, 3) * p3.x;
+            let cy = Math.pow(1-t, 3) * p0.y + 3 * Math.pow(1-t, 2) * t * p1.y + 3 * (1-t) * Math.pow(t, 2) * p2.y + Math.pow(t, 3) * p3.y;
+
+            gpsCtx.fillStyle = '#ff4757';
+            gpsCtx.shadowColor = '#ff4757';
+            gpsCtx.shadowBlur = 10;
+            gpsCtx.beginPath();
+            gpsCtx.arc(cx, cy, 6, 0, Math.PI * 2);
+            gpsCtx.fill();
+            gpsCtx.shadowBlur = 0;
+        }
+
+        let weatherModes = [
+            { name: "☀️ Sunny (Dry Road)", temp: "26°C", road: "Normal Asphalt (Dry)", wiper: "Off", atmos: "dots" },
+            { name: "🌧️ Rainy (Wet Road)", temp: "14°C", road: "Wet & Slippery Surface", wiper: "Active (Medium)", atmos: "rain" },
+            { name: "❄️ Snowy & Cold Road", temp: "-2°C", road: "Snowy Surface", wiper: "Slow", atmos: "snow" },
+            { name: "🌫️ Foggy & Low Visibility", temp: "9°C", road: "Damp & Low Visibility", wiper: "Off", atmos: "matrix" }
+        ];
+        let currentWeatherIdx = 0;
+
+        setInterval(() => {
+            let currentSpeed = Math.floor(75 + Math.random() * 25);
+            document.getElementById('speedVal').innerText = currentSpeed;
+            totalKm += (currentSpeed / 3600) * 2; 
+            document.getElementById('tripKm').innerText = totalKm.toFixed(1) + " km";
+
+            const audio = document.getElementById('bg-audio');
+            const bars = document.querySelectorAll('.viz-bar');
+            if (!audio.paused && audio.src) {
+                bars.forEach(bar => {
+                    let h = Math.floor(Math.random() * 42 + 4);
+                    bar.style.height = h + 'px';
+                });
+            } else {
+                bars.forEach(bar => { bar.style.height = '3px'; });
+            }
+
+            drawGpsMap();
+        }, 300);
+
+        setInterval(() => {
+            currentWeatherIdx = (currentWeatherIdx + 1) % weatherModes.length;
+            let wm = weatherModes[currentWeatherIdx];
+            document.getElementById('weatherIndicator').innerText = wm.name;
+            document.getElementById('weatherTemp').innerText = wm.temp;
+            document.getElementById('roadCondition').innerText = wm.road;
+            document.getElementById('wiperStatus').innerText = wm.wiper;
+            atmosType = wm.atmos;
+            document.getElementById('atmosMode').value = wm.atmos;
+        }, 25000);
 
         function updateBackgroundColors() {
             if(localStorage.getItem('tp_bg_img')) return;
@@ -580,9 +744,7 @@
             }
 
             const savedAudio = localStorage.getItem('tp_custom_audio');
-            if(savedAudio) {
-                customAudioUrl = savedAudio;
-            }
+            if(savedAudio) { customAudioUrl = savedAudio; }
 
             const savedVol = localStorage.getItem('tp_volume');
             if(savedVol) {
@@ -590,18 +752,39 @@
                 document.getElementById('bg-audio').volume = savedVol;
             }
 
+            const savedNotes = localStorage.getItem('tp_driver_notes');
+            if(savedNotes) { document.getElementById('driverNotes').value = savedNotes; }
+
+            initLogbook();
             fetchYouTubeVideos();
             initReflexGame();
+            initGpsCanvas();
         });
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'tr' ? 'en' : 'tr';
-            document.querySelectorAll('[data-tr]').forEach(el => {
-                if(el.tagName === 'INPUT' && el.hasAttribute(`data-${currentLang}`)) {
-                    el.placeholder = el.getAttribute(`data-${currentLang}`);
-                } else {
-                    el.innerText = el.getAttribute(`data-${currentLang}`);
-                }
+        function initLogbook() {
+            const routes = [
+                { from: "Izmir", to: "Edirne", cargo: "Container (Food)", weather: "Rainy / Wet Road" },
+                { from: "Antalya", to: "Trabzon", cargo: "Fresh Citrus", weather: "Sunny / Normal Asphalt" },
+                { from: "Istanbul", to: "Ankara", cargo: "Heavy Machine Part", weather: "Foggy / Low Visibility" },
+                { from: "Bursa", to: "Adana", cargo: "Automotive Parts", weather: "Partly Cloudy" },
+                { from: "Mersin", to: "Samsun", cargo: "Chemical Cargo", weather: "Windy & Rainy" }
+            ];
+
+            let logs = JSON.parse(localStorage.getItem('tp_driver_logs') || '[]');
+            const now = new Date();
+            const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            let chosenRoute = routes[Math.floor(Math.random() * routes.length)];
+            document.getElementById('gpsRouteInfo').innerText = `ROUTE: ${chosenRoute.from.toUpperCase()} -> ${chosenRoute.to.toUpperCase()}`;
+
+            logs.unshift({ date: dateStr, route: `${chosenRoute.from} -> ${chosenRoute.to}`, cargo: chosenRoute.cargo, weather: chosenRoute.weather });
+            if(logs.length > 5) logs.pop(); 
+            localStorage.setItem('tp_driver_logs', JSON.stringify(logs));
+
+            const container = document.getElementById('logbookContainer');
+            container.innerHTML = '';
+            logs.forEach(l => {
+                container.innerHTML += `<div>[${l.date}] Route: ${l.route} | Cargo: ${l.cargo} | Weather: ${l.weather}</div>`;
             });
         }
 
@@ -636,7 +819,7 @@
                     });
                 }
             } catch (err) {
-                grid.innerHTML = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center;" data-tr="Videolar yüklenemedi." data-en="Failed to load videos.">Videolar yüklenemedi.</p>`;
+                grid.innerHTML = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center;">Failed to load videos.</p>`;
             }
         }
 
@@ -763,7 +946,7 @@
             ctx.fillStyle = '#ff4757'; 
             ctx.fillRect(0, 0, c.width, c.height);
             reflexState = 'waiting';
-            document.getElementById('reflexStatus').innerText = currentLang === 'tr' ? "Kırmızı Işık - Bekle..." : "Red Light - Wait...";
+            document.getElementById('reflexStatus').innerText = "Red Light - Wait...";
 
             let randomTime = Math.random() * 2000 + 2000;
             timeoutId = setTimeout(() => {
@@ -771,7 +954,7 @@
                 ctx.fillRect(0, 0, c.width, c.height);
                 reflexState = 'ready';
                 startTime = Date.now();
-                document.getElementById('reflexStatus').innerText = currentLang === 'tr' ? "YEŞİL! BAS!" : "GREEN! PRESS!";
+                document.getElementById('reflexStatus').innerText = "GREEN! PRESS!";
             }, randomTime);
         }
 
