@@ -13,16 +13,8 @@
             --text-color: #f1f1f1;
             --text-muted: #aaa;
             --border-color: #222;
+            --green: #2ed573;
         }
-
-        body { cursor: none; }
-        .custom-cursor {
-            position: fixed; width: 20px; height: 20px; border: 2px solid var(--accent);
-            border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
-            transition: transform 0.1s ease, background 0.2s, border-color 0.2s; z-index: 9999;
-            box-shadow: 0 0 10px var(--accent);
-        }
-        .custom-cursor.hovered { transform: translate(-50%, -50%) scale(1.8); background: rgba(255, 71, 87, 0.3); }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -30,13 +22,13 @@
             background-color: var(--bg-color-1);
             background-image: linear-gradient(135deg, var(--bg-color-1) 0%, var(--bg-color-2) 100%);
             color: var(--text-color); line-height: 1.6; min-height: 100vh; overflow-x: hidden;
-            transition: background 0.3s;
+            transition: background 0.3s; cursor: default;
         }
 
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
 
         header {
-            background: rgba(17, 17, 17, 0.85); backdrop-filter: blur(10px);
+            background: rgba(17, 17, 17, 0.9); backdrop-filter: blur(10px);
             border-bottom: 2px solid var(--accent); padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1000; transition: border-color 0.3s;
@@ -45,37 +37,62 @@
         .logo { font-size: 22px; font-weight: 800; color: var(--text-color); letter-spacing: 1px; }
         .logo span { color: var(--accent); }
 
-        .nav-right { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-        nav a { color: var(--text-muted); text-decoration: none; font-weight: 600; transition: 0.3s; }
-        nav a:hover { color: var(--accent); }
-
-        .lang-btn, .theme-btn {
-            background: #222; border: 1px solid var(--border-color); color: white;
-            padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;
-        }
+        .nav-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         
-        .color-picker-wrapper { display: flex; align-items: center; gap: 8px; background: #16161c; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
+        .nav-links { display: flex; align-items: center; gap: 15px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; transition: 0.3s; cursor: pointer; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* Hamburger Menü Butonu */
+        .hamburger {
+            display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px;
+        }
+        .hamburger span { width: 25px; height: 3px; background: var(--text-color); border-radius: 3px; transition: 0.3s; }
+
+        .lang-btn, .music-btn, .game-tab-btn {
+            background: #222; border: 1px solid var(--border-color); color: white;
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover, .music-btn:hover, .game-tab-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .game-tab-btn.active { background: var(--accent); border-color: var(--accent); }
+        
+        .color-picker-wrapper { display: flex; align-items: center; gap: 6px; background: #16161c; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-color); }
         .color-picker-wrapper input[type="color"] { background: none; border: none; width: 24px; height: 24px; cursor: pointer; border-radius: 4px; }
         
-        /* Müzikçalar Stili */
         .music-player {
-            display: flex; align-items: center; gap: 10px; background: #16161c; 
-            padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 12px;
+            display: flex; align-items: center; gap: 8px; background: #16161c; 
+            padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 12px;
         }
         .music-player input[type="file"] { display: none; }
-        .music-btn { background: #222; border: 1px solid var(--border-color); color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
-        .music-btn:hover { border-color: var(--accent); }
-        .music-player input[type="range"] { width: 70px; accent-color: var(--accent); cursor: pointer; }
+        .music-player input[type="range"] { width: 60px; accent-color: var(--accent); cursor: pointer; }
 
         .container { max-width: 1300px; margin: 0 auto; padding: 30px 20px; position: relative; z-index: 2; }
 
         .hero {
             text-align: center; padding: 40px 20px;
-            background: rgba(26, 8, 8, 0.6); backdrop-filter: blur(5px);
-            border-radius: 12px; margin-bottom: 30px; border: 1px solid #2a1111;
+            background: rgba(26, 8, 8, 0.6); backdrop-filter: blur(10px);
+            border-radius: 14px; margin-bottom: 30px; border: 1px solid #2a1111;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeIn 0.6s ease;
         }
         .hero h1 { font-size: 32px; margin-bottom: 10px; }
         .hero p { color: var(--text-muted); font-size: 16px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .channels-section { margin-bottom: 40px; }
+        .channels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        .channel-card {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
+            padding: 20px; text-align: center; text-decoration: none; color: var(--text-color);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            transition: transform 0.2s ease, border-color 0.3s, box-shadow 0.3s;
+        }
+        .channel-card:hover { border-color: var(--accent); box-shadow: 0 8px 25px rgba(255, 71, 87, 0.25); transform: translateY(-4px); }
+        .channel-card span.icon { font-size: 28px; }
+        .channel-card h4 { font-size: 16px; font-weight: 700; }
+        .channel-card p { font-size: 12px; color: var(--text-muted); }
 
         section { margin-bottom: 50px; }
         h2 { font-size: 24px; margin-bottom: 20px; border-left: 4px solid var(--accent); padding-left: 10px; transition: border-color 0.3s; }
@@ -84,48 +101,96 @@
 
         .card {
             background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 10px; overflow: hidden; transition: 0.3s; display: flex; flex-direction: column;
+            border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+            transition: transform 0.2s ease, border-color 0.3s, box-shadow 0.3s;
         }
-        .card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 5px 15px rgba(255, 71, 87, 0.2); }
+        .card:hover { border-color: var(--accent); box-shadow: 0 8px 25px rgba(255, 71, 87, 0.25); transform: translateY(-4px); }
 
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
         .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .card-content h3 { font-size: 16px; margin-bottom: 5px; }
-        .card-content p { color: var(--text-muted); font-size: 13px; }
+        .card-content p { color: var(--text-muted); font-size: 13px; margin-bottom: 10px; }
+
+        /* Mini Oyunlar Alanı Stili */
+        .games-container { display: none; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+        .game-card {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px;
+            padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center;
+            transition: transform 0.2s ease, border-color 0.3s, box-shadow 0.3s;
+        }
+        .game-card:hover { border-color: var(--accent); box-shadow: 0 8px 25px rgba(255, 71, 87, 0.25); transform: translateY(-4px); }
+        .game-card h3 { margin-bottom: 12px; font-size: 18px; color: var(--accent); }
+        canvas.game-canvas { background: #050508; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 12px; max-width: 100%; }
+        .game-btn {
+            background: var(--accent); border: none; color: white; padding: 8px 18px;
+            border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s;
+        }
+        .game-btn:hover { opacity: 0.9; transform: scale(1.05); }
+        .game-score { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; font-weight: bold; }
+
+        /* EKRANIN ORTASINDAN ÇIKAN TOAST BİLDİRİMLERİ */
+        #toast-container {
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; width: 90%; max-width: 450px;
+        }
+        .toast {
+            background: rgba(18, 18, 24, 0.95); border: 1px solid var(--accent); color: var(--text-color);
+            padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6); pointer-events: auto; width: 100%;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, fadeOut 0.3s ease 2.7s forwards;
+        }
+        @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
 
         footer { text-align: center; padding: 25px; background: #111; color: var(--text-muted); border-top: 1px solid var(--border-color); font-size: 13px; }
+
+        /* Mobil Responsive & Hamburger Menü Medya Sorgusu */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: absolute; top: 100%; left: 0; width: 100%; background: rgba(17, 17, 17, 0.95);
+                backdrop-filter: blur(10px); flex-direction: column; padding: 20px; border-bottom: 2px solid var(--accent);
+                max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out, padding 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            }
+            .nav-links.active { max-height: 200px; padding: 20px; }
+            header { padding: 12px 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="custom-cursor" id="cursor"></div>
     <canvas id="bg-canvas"></canvas>
+    <div id="toast-container"></div>
 
-    <!-- Arka Plan Müzikçalar (Kalıcı) -->
     <audio id="bg-audio" loop></audio>
 
     <header>
         <div class="logo">TRUCK<span>PULSE</span></div>
         <div class="nav-right">
-            <nav>
-                <a href="#videos" data-tr="Son Videolar" data-en="Latest Videos">Son Videolar</a>
+            <button class="hamburger" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <nav class="nav-links" id="navLinks">
+                <a onclick="switchTab('videos'); toggleMobileMenu();" data-tr="Videolar" data-en="Videos">Videolar</a>
+                <a onclick="switchTab('games'); toggleMobileMenu();" data-tr="Minigames 🎮" data-en="Minigames 🎮">Minigames 🎮</a>
             </nav>
 
-            <!-- Arka Plan Renk Kutuları -->
             <div class="color-picker-wrapper">
                 <span>🎨</span>
                 <input type="color" id="bgColor1" value="#08080c" onchange="updateBackgroundColors()" title="Arka Plan Üst Renk">
                 <input type="color" id="bgColor2" value="#1a080c" onchange="updateBackgroundColors()" title="Arka Plan Alt Renk">
             </div>
 
-            <!-- Müzik Paneli -->
             <div class="music-player">
-                <label for="musicFile" class="music-btn" title="Müzik Dosyası Seç">🎵 Müzik Seç</label>
+                <label for="musicFile" class="music-btn" title="Müzik Seç">🎵</label>
                 <input type="file" id="musicFile" accept="audio/*" onchange="handleMusicUpload(this)">
-                <button class="music-btn" id="playPauseBtn" onclick="togglePlayPause()">▶ Oynat</button>
-                <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.5" oninput="changeVolume(this.value)" title="Ses Seviyesi">
+                <button class="music-btn" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.5" oninput="changeVolume(this.value)" title="Ses">
             </div>
 
             <button class="lang-btn" onclick="toggleLanguage()">EN / TR</button>
@@ -134,14 +199,71 @@
 
     <div class="container">
         <div class="hero">
-            <h1 data-tr="Tır Kanalı Resmi Video Akışı" data-en="Truck Channel Official Video Feed">Tır Kanalı Resmi Video Akışı</h1>
-            <p data-tr="YouTube kanalından son 10 video otomatik olarak çekilmektedir." data-en="The last 10 videos are automatically fetched from the YouTube channel.">YouTube kanalından son 10 video otomatik olarak çekilmektedir.</p>
+            <h1 data-tr="Tır Kanalı ve Sürücü Merkezi" data-en="Truck Channel & Driver Hub">Tır Kanalı ve Sürücü Merkezi</h1>
+            <p data-tr="Son videoları izle veya mola verip mini oyunlar oyna!" data-en="Watch latest videos or take a break and play mini games!">Son videoları izle veya mola verip mini oyunlar oyna!</p>
         </div>
 
-        <section id="videos">
+        <!-- KANALLAR VE SOSYAL MEDYA KARTLARI -->
+        <div class="channels-section">
+            <h2 data-tr="Kanallar ve Bağlantılar" data-en="Channels & Links">Kanallar ve Bağlantılar</h2>
+            <div class="channels-grid">
+                <a href="https://www.youtube.com/channel/UCM6EXLZFrqGu5Yd0gf1PCpg" target="_blank" class="channel-card">
+                    <span class="icon">📺</span>
+                    <h4>Renxc(MainAcc)</h4>
+                    <p data-tr="Ana YouTube Kanalı" data-en="Main YouTube Channel">Ana YouTube Kanalı</p>
+                </a>
+                <a href="https://www.youtube.com/channel/UCMlwfGb4x0IwAzuNlxeLcZQ" target="_blank" class="channel-card">
+                    <span class="icon">📊</span>
+                    <h4>FluxTest(BenchMark)</h4>
+                    <p data-tr="Benchmark & Test Kanalı" data-en="Benchmark Channel">Benchmark & Test Kanalı</p>
+                </a>
+                <a href="https://guns.lol/nyxven" target="_blank" class="channel-card">
+                    <span class="icon">🔗</span>
+                    <h4>Guns.lol / nyxven</h4>
+                    <p data-tr="Kişisel Bağlantı Hub" data-en="Personal Link Hub">Kişisel Bağlantı Hub</p>
+                </a>
+                <a href="https://www.tiktok.com/@nyxven.inc" target="_blank" class="channel-card">
+                    <span class="icon">🎬</span>
+                    <h4>TikTok @nyxven.inc</h4>
+                    <p data-tr="Kısa Video Paylaşımları" data-en="Short Videos">Kısa Video Paylaşımları</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- VİDEOLAR BÖLÜMÜ -->
+        <section id="section-videos">
             <h2 data-tr="Son 10 Video" data-en="Last 10 Videos">Son 10 Video</h2>
             <div class="grid" id="youtube-grid">
                 <p style="color:var(--text-muted); grid-column:1/-1; text-align:center;" data-tr="Videolar yükleniyor..." data-en="Loading videos...">Videolar yükleniyor...</p>
+            </div>
+        </section>
+
+        <!-- MİNİ OYUNLAR BÖLÜMÜ -->
+        <section id="section-games" class="games-container" style="display:none;">
+            <h2 style="grid-column: 1/-1;" data-tr="Tırcı Dinlenme Tesisleri - Mini Oyunlar" data-en="Trucker Rest Area - Mini Games">Tırcı Dinlenme Tesisleri - Mini Oyunlar</h2>
+            
+            <!-- Oyun 1: Otoyol Kaçış -->
+            <div class="game-card">
+                <h3 data-tr="🛣️ Otoyol Tır Kaçış (Hızlı)" data-en="🛣️ Highway Dodger">🛣️ Otoyol Tır Kaçış (Hızlı)</h3>
+                <div class="game-score"><span data-tr="Skor:" data-en="Score:">Skor:</span> <span id="highwayScore">0</span></div>
+                <canvas id="highwayCanvas" class="game-canvas" width="300" height="350"></canvas>
+                <button class="game-btn" onclick="startHighwayGame()" data-tr="Oyunu Başlat / Yeniden" data-en="Start / Restart">Başlat</button>
+            </div>
+
+            <!-- Oyun 2: Hassas Tır Park Etme -->
+            <div class="game-card">
+                <h3 data-tr="🅿️ Engelli Park (R ile Dön)" data-en="🅿️ Precision Parking">🅿️ Engelli Park (R ile Dön)</h3>
+                <div class="game-score"><span data-tr="Seviye:" data-en="Level:">Seviye:</span> <span id="parkingLevel">1</span></div>
+                <canvas id="parkingCanvas" class="game-canvas" width="300" height="350"></canvas>
+                <button class="game-btn" onclick="startParkingGame()" data-tr="Oyunu Başlat / Sıfırla" data-en="Start / Reset">Başlat / Sıfırla</button>
+            </div>
+
+            <!-- Oyun 3: Yeşil Işık Refleks -->
+            <div class="game-card">
+                <h3 data-tr="🚦 Trafik Işığı Refleksi" data-en="🚦 Traffic Light Reflex">🚦 Trafik Işığı Refleksi</h3>
+                <div class="game-score" id="reflexStatus" data-tr="Yeşili Bekle..." data-en="Wait for Green...">Yeşili Bekle...</div>
+                <canvas id="reflexCanvas" class="game-canvas" width="300" height="350"></canvas>
+                <button class="game-btn" onclick="handleReflexClick()" data-tr="ŞİMDİ BAS!" data-en="PRESS NOW!">BAS!</button>
             </div>
         </section>
     </div>
@@ -152,19 +274,51 @@
 
     <script>
         const CHANNEL_ID = "UClEw9mpj18NkIAetNMA_DiA";
+        let currentLang = 'tr';
 
-        // İmleç Efekti
-        const cursor = document.getElementById('cursor');
-        window.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.querySelectorAll('a, button, input').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
+        const messages = {
+            tr: {
+                musicLoaded: "Müzik başarıyla yüklendi knk! 🎵",
+                musicSelectError: "Önce müzik seç knk!",
+                truckRotated: "Tır döndürüldü! 🔄",
+                hitBarrier: "⚠️ Engele çarptın knk dikkat et!",
+                levelPass: "🏆 Helal lan! Parkı kaptın, sonraki seviye!",
+                parkStart: "Park oyunu başladı! R tuşuyla dönebilirsin.",
+                earlyReflex: "❌ Erken bastın lan, kırmızıdaydı!",
+                crashHighway: "💥 Kaza yaptın knk! Skorun: "
+            },
+            en: {
+                musicLoaded: "Music successfully loaded bro! 🎵",
+                musicSelectError: "Select music first bro!",
+                truckRotated: "Truck rotated! 🔄",
+                hitBarrier: "⚠️ You hit the barrier, watch out!",
+                levelPass: "🏆 Awesome! Parking cleared, next level!",
+                parkStart: "Parking game started! Press R to rotate.",
+                earlyReflex: "❌ Too early, it was red!",
+                crashHighway: "💥 You crashed! Your score: "
+            }
+        };
 
-        // Canvas Arka Plan Efekti
+        function showToast(key, extra = '') {
+            const text = messages[currentLang][key] + extra;
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = text;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        function switchTab(tab) {
+            document.getElementById('section-videos').style.display = tab === 'videos' ? 'block' : 'none';
+            document.getElementById('section-games').style.display = tab === 'games' ? 'grid' : 'none';
+        }
+
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -183,15 +337,12 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#ff4757';
             ctx.globalAlpha = 0.4;
-            
             particles.forEach(p => {
                 p.y += p.speedY;
                 if (p.y > canvas.height) p.y = 0;
-
                 let dx = mouseX - p.x, dy = mouseY - p.y;
                 let dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < 80) { p.x -= dx * 0.03; p.y -= dy * 0.03; }
-
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -200,24 +351,18 @@
         }
         animateParticles();
 
-        // Arka Plan Renk Yönetimi ve Kalıcılığı
         function updateBackgroundColors() {
             const c1 = document.getElementById('bgColor1').value;
             const c2 = document.getElementById('bgColor2').value;
-
             document.documentElement.style.setProperty('--bg-color-1', c1);
             document.documentElement.style.setProperty('--bg-color-2', c2);
             document.body.style.backgroundImage = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
-
             localStorage.setItem('tp_bg_c1', c1);
             localStorage.setItem('tp_bg_c2', c2);
         }
 
-        // Müzikçalar Yönetimi ve Yerel Depolama (Base64)
         const audio = document.getElementById('bg-audio');
-
         window.addEventListener('DOMContentLoaded', () => {
-            // Renkleri yükle
             const savedC1 = localStorage.getItem('tp_bg_c1');
             const savedC2 = localStorage.getItem('tp_bg_c2');
             if (savedC1 && savedC2) {
@@ -226,26 +371,15 @@
                 updateBackgroundColors();
             }
 
-            // Müziği yükle
             const savedMusic = localStorage.getItem('tp_saved_music');
             const savedVolume = localStorage.getItem('tp_music_vol');
-            
-            if (savedVolume) {
-                audio.volume = parseFloat(savedVolume);
-                document.getElementById('volumeSlider').value = savedVolume;
-            }
-
+            if (savedVolume) { audio.volume = parseFloat(savedVolume); document.getElementById('volumeSlider').value = savedVolume; }
             if (savedMusic) {
                 audio.src = savedMusic;
-                audio.play().then(() => {
-                    document.getElementById('playPauseBtn').innerText = "⏸ Durdur";
-                }).catch(() => {
-                    // Tarayıcı otomatik oynatmayı engellerse kullanıcı tıklaması gerekebilir
-                    document.getElementById('playPauseBtn').innerText = "▶ Oynat";
-                });
+                audio.play().then(() => { document.getElementById('playPauseBtn').innerText = "⏸"; }).catch(() => {});
             }
-
             fetchYouTubeVideos();
+            initReflexGame();
         });
 
         function handleMusicUpload(input) {
@@ -257,32 +391,21 @@
                     localStorage.setItem('tp_saved_music', base64Audio);
                     audio.src = base64Audio;
                     audio.play();
-                    document.getElementById('playPauseBtn').innerText = "⏸ Durdur";
+                    document.getElementById('playPauseBtn').innerText = "⏸";
+                    showToast('musicLoaded');
                 };
                 reader.readAsDataURL(file);
             }
         }
 
         function togglePlayPause() {
-            if (!audio.src) {
-                alert("Önce bir müzik dosyası seçmelisin knk!");
-                return;
-            }
-            if (audio.paused) {
-                audio.play();
-                document.getElementById('playPauseBtn').innerText = "⏸ Durdur";
-            } else {
-                audio.pause();
-                document.getElementById('playPauseBtn').innerText = "▶ Oynat";
-            }
+            if (!audio.src) { showToast('musicSelectError'); return; }
+            if (audio.paused) { audio.play(); document.getElementById('playPauseBtn').innerText = "⏸"; }
+            else { audio.pause(); document.getElementById('playPauseBtn').innerText = "▶"; }
         }
 
-        function changeVolume(val) {
-            audio.volume = val;
-            localStorage.setItem('tp_music_vol', val);
-        }
+        function changeVolume(val) { audio.volume = val; localStorage.setItem('tp_music_vol', val); }
 
-        let currentLang = 'tr';
         function toggleLanguage() {
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             document.querySelectorAll('[data-tr]').forEach(el => {
@@ -295,17 +418,15 @@
             try {
                 const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
                 const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-                
                 const res = await fetch(api);
                 const data = await res.json();
 
                 if (data.status === 'ok' && data.items) {
                     grid.innerHTML = '';
-                    const items = data.items.slice(0, 10);
-                    
-                    items.forEach(item => {
+                    data.items.slice(0, 10).forEach(item => {
                         const videoId = item.guid.split(':').pop();
                         const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                        const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
                         
                         const card = document.createElement('div');
                         card.className = 'card';
@@ -316,21 +437,165 @@
                                     <h3>${escapeHtml(item.title)}</h3>
                                     <p>${new Date(item.pubDate).toLocaleDateString()}</p>
                                 </div>
+                                <a href="${watchUrl}" target="_blank" class="game-btn" style="text-align:center; text-decoration:none; display:block; font-size:12px; padding:6px;">YouTube ↗</a>
                             </div>
                         `;
                         grid.appendChild(card);
                     });
-                } else {
-                    grid.innerHTML = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center;">Videolar yüklenemedi.</p>`;
                 }
             } catch (err) {
-                console.error("Hata:", err);
-                grid.innerHTML = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center;">Bağlantı hatası oluştu.</p>`;
+                grid.innerHTML = `<p style="color:var(--text-muted); grid-column:1/-1; text-align:center;">Videolar yüklenemedi.</p>`;
             }
         }
 
         function escapeHtml(text) {
             return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+        }
+
+        // --- MİNİ OYUN 1: OTOYOL KAÇIŞ ---
+        let hwInterval;
+        function startHighwayGame() {
+            clearInterval(hwInterval);
+            const c = document.getElementById('highwayCanvas');
+            const ctx = c.getContext('2d');
+            let truckX = 130, score = 0, isOver = false;
+            let obstacles = [
+                {x: Math.random() * 240 + 30, y: -50, speed: 6},
+                {x: Math.random() * 240 + 30, y: -200, speed: 7}
+            ];
+
+            window.addEventListener('keydown', e => {
+                if (e.key === 'ArrowLeft' && truckX > 20) truckX -= 25;
+                if (e.key === 'ArrowRight' && truckX < 240) truckX += 25;
+            });
+
+            hwInterval = setInterval(() => {
+                if (isOver) return;
+                ctx.fillStyle = '#050508';
+                ctx.fillRect(0, 0, c.width, c.height);
+
+                ctx.strokeStyle = '#444'; ctx.setLineDash([15, 15]);
+                ctx.beginPath(); ctx.moveTo(100, 0); ctx.lineTo(100, c.height); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(200, 0); ctx.lineTo(200, c.height); ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#ff4757';
+                ctx.fillRect(truckX, c.height - 70, 35, 55);
+
+                obstacles.forEach(obs => {
+                    obs.y += obs.speed;
+                    ctx.fillStyle = '#3498db';
+                    ctx.fillRect(obs.x, obs.y, 35, 45);
+
+                    if (obs.y + 45 > c.height - 70 && obs.y < c.height - 15 && obs.x < truckX + 35 && obs.x + 35 > truckX) {
+                        isOver = true;
+                        showToast('crashHighway', score);
+                    }
+
+                    if (obs.y > c.height) {
+                        obs.y = -Math.random() * 100 - 50;
+                        obs.x = Math.random() * 240 + 30;
+                        score++;
+                        document.getElementById('highwayScore').innerText = score;
+                    }
+                });
+            }, 25);
+        }
+
+        // --- MİNİ OYUN 2: ENGELLİ PARK ETME ---
+        function startParkingGame() {
+            const c = document.getElementById('parkingCanvas');
+            const ctx = c.getContext('2d');
+            let px = 130, py = 280, isRotated = false, level = 1;
+            
+            let targetX = Math.random() * 180 + 40;
+            let targetY = Math.random() * 80 + 20;
+            let barrierX = Math.random() * 160 + 50;
+            let barrierY = targetY + 90;
+            let barrierW = 100, barrierH = 20;
+
+            window.onkeydown = function(e) {
+                if (e.key === 'ArrowUp') py -= 8;
+                if (e.key === 'ArrowDown') py += 8;
+                if (e.key === 'ArrowLeft') px -= 8;
+                if (e.key === 'ArrowRight') px += 8;
+                if (e.key === 'r' || e.key === 'R') {
+                    isRotated = !isRotated;
+                    showToast('truckRotated');
+                }
+
+                if (px < 10) px = 10; if (px > c.width - 40) px = c.width - 40;
+                if (py < 10) py = 10; if (py > c.height - 40) py = c.height - 40;
+
+                let tW = isRotated ? 50 : 30;
+                let tH = isRotated ? 30 : 50;
+
+                if (px < barrierX + barrierW && px + tW > barrierX && py < barrierY + barrierH && py + tH > barrierY) {
+                    showToast('hitBarrier');
+                    px = 130; py = 280;
+                }
+
+                ctx.fillStyle = '#050508';
+                ctx.fillRect(0, 0, c.width, c.height);
+
+                ctx.strokeStyle = '#2ed573'; ctx.lineWidth = 3;
+                ctx.strokeRect(targetX, targetY, 50, 70);
+
+                ctx.fillStyle = '#e74c3c';
+                ctx.fillRect(barrierX, barrierY, barrierW, barrierH);
+
+                ctx.fillStyle = '#ff4757';
+                ctx.fillRect(px, py, tW, tH);
+
+                if (Math.abs(px - targetX) < 15 && Math.abs(py - targetY) < 15) {
+                    level++;
+                    document.getElementById('parkingLevel').innerText = level;
+                    showToast('levelPass');
+                    px = 130; py = 280; isRotated = false;
+                    targetX = Math.random() * 180 + 40;
+                    targetY = Math.random() * 70 + 20;
+                    barrierX = Math.random() * 160 + 50;
+                    barrierY = targetY + 80;
+                }
+            };
+
+            ctx.fillStyle = '#050508'; ctx.fillRect(0, 0, c.width, c.height);
+            ctx.strokeStyle = '#2ed573'; ctx.lineWidth = 3; ctx.strokeRect(targetX, targetY, 50, 70);
+            ctx.fillStyle = '#e74c3c'; ctx.fillRect(barrierX, barrierY, barrierW, barrierH);
+            ctx.fillStyle = '#ff4757'; ctx.fillRect(px, py, 30, 50);
+            showToast('parkStart');
+        }
+
+        // --- MİNİ OYUN 3: REFLEKS TESTİ ---
+        let reflexState = 'waiting', startTime, timeoutId;
+        function initReflexGame() {
+            const c = document.getElementById('reflexCanvas');
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#ff4757'; 
+            ctx.fillRect(0, 0, c.width, c.height);
+            reflexState = 'waiting';
+            document.getElementById('reflexStatus').innerText = currentLang === 'tr' ? "Kırmızı Işık - Bekle..." : "Red Light - Wait...";
+
+            let randomTime = Math.random() * 2000 + 2000;
+            timeoutId = setTimeout(() => {
+                ctx.fillStyle = '#2ed573'; 
+                ctx.fillRect(0, 0, c.width, c.height);
+                reflexState = 'ready';
+                startTime = Date.now();
+                document.getElementById('reflexStatus').innerText = currentLang === 'tr' ? "YEŞİL! BAS!" : "GREEN! PRESS!";
+            }, randomTime);
+        }
+
+        function handleReflexClick() {
+            if (reflexState === 'waiting') {
+                clearTimeout(timeoutId);
+                showToast('earlyReflex');
+                initReflexGame();
+            } else if (reflexState === 'ready') {
+                let reactionTime = Date.now() - startTime;
+                showToast('musicLoaded', ` Süren: ${reactionTime} ms`);
+                initReflexGame();
+            }
         }
     </script>
 </body>
