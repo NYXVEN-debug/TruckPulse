@@ -45,11 +45,13 @@
         .logo { font-size: 20px; font-weight: 800; color: var(--text-color); letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .logo span { color: var(--accent); }
 
+        .plate-container { display: flex; align-items: center; gap: 8px; }
         .plate-box {
             background: #f1c40f; color: #111; font-family: monospace; font-weight: 900;
             padding: 2px 8px; border-radius: 4px; font-size: 13px; border: 2px solid #fff;
             box-shadow: 0 2px 5px rgba(0,0,0,0.5); letter-spacing: 1px;
         }
+        .brand-icon-box { font-size: 18px; display: flex; align-items: center; }
 
         .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .nav-links { display: flex; align-items: center; gap: 15px; }
@@ -213,7 +215,10 @@
     <header>
         <div class="logo">
             TRUCK<span>PULSE</span>
-            <div class="plate-box" id="headerPlate">34 NYX 07</div>
+            <div class="plate-container">
+                <div class="brand-icon-box" id="brandIconBox">🚚</div>
+                <div class="plate-box" id="headerPlate">34 NYX 07</div>
+            </div>
         </div>
         <div class="nav-right">
             <button class="hamburger" onclick="toggleMobileMenu()">
@@ -304,10 +309,17 @@
         <div class="garage-section">
             <div>
                 <h3 style="font-size:15px; color:var(--accent); margin-bottom:4px;">🛠️ Driver Garage & Customization</h3>
-                <p style="font-size:11px; color:var(--text-muted);">Edit your license plate, upload wallpaper or custom music.</p>
+                <p style="font-size:11px; color:var(--text-muted);">Edit your license plate, choose your truck model, or customize wallpapers and music.</p>
             </div>
             <div class="garage-inputs">
                 <input type="text" id="plateInput" placeholder="Enter Plate" maxlength="12">
+                <select id="truckModelSelect" class="action-btn" onchange="changeTruckModel(this.value)" title="Truck Model">
+                    <option value="Ford F-MAX">Ford F-MAX</option>
+                    <option value="Scania S500">Scania S500</option>
+                    <option value="Volvo FH16">Volvo FH16</option>
+                    <option value="Mercedes Actros">Mercedes Actros</option>
+                    <option value="DAF XG+">DAF XG+</option>
+                </select>
                 <button class="action-btn" onclick="savePlate()">Save</button>
                 
                 <label for="bgImageFile" class="action-btn" style="cursor:pointer;">🖼️ Image</label>
@@ -321,16 +333,24 @@
         </div>
 
         <div class="garage-section" style="padding: 10px 15px;">
-            <div style="font-size:13px; font-weight:bold;">🌧️ Mouse-Interactive Atmosphere Effects</div>
+            <div style="font-size:13px; font-weight:bold;">✨ Atmosphere & Matrix Color Customizer</div>
             <div class="garage-inputs">
-                <label style="font-size:11px;">Mode: 
+                <label style="font-size:11px;">Effect: 
                     <select id="atmosMode" onchange="changeAtmosMode(this.value)" class="action-btn" style="padding:3px;">
-                        <option value="dots">Dot Particles</option>
-                        <option value="rain">Rain Effect</option>
-                        <option value="matrix">Matrix Code</option>
-                        <option value="snow">Snow Effect</option>
-                        <option value="off">Off</option>
+                        <option value="matrix">Noktalar (Matrix)</option>
+                        <option value="rain">Yağmur Efekti</option>
+                        <option value="snow">Kar Yağışı</option>
+                        <option value="shooting">Yıldız Kayması</option>
+                        <option value="bubbles">Baloncuklar</option>
+                        <option value="fireflies">Ateş Böcekleri</option>
+                        <option value="confetti">Konfeti</option>
+                        <option value="plasma">Plazma Parçacıkları</option>
+                        <option value="cybergrid">Siber Izgara</option>
+                        <option value="off">Kapalı</option>
                     </select>
+                </label>
+                <label style="font-size:11px;">Matrix/Effect Color: 
+                    <input type="color" id="matrixColorPicker" value="#2ed573" onchange="updateMatrixColor(this.value)" style="background:none; border:none; width:22px; height:22px; cursor:pointer; vertical-align:middle;">
                 </label>
                 <label style="font-size:11px;">Speed: <input type="range" id="speedRange" min="0.5" max="3" step="0.5" value="1" oninput="particleSpeed = parseFloat(this.value)"></label>
             </div>
@@ -395,7 +415,7 @@
         </section>
 
         <div class="terminal-box" id="terminalLogs">
-            > TruckPulse v2.9 active. Cockpit & dynamic road systems online!
+            > TruckPulse v3.0 active. Cockpit & dynamic road systems online! All English UI loaded.
         </div>
     </div>
 
@@ -406,10 +426,19 @@
     <script>
         const CHANNEL_ID = "UClEw9mpj18NkIAetNMA_DiA";
         let particleSpeed = 1;
-        let atmosType = 'dots';
+        let atmosType = 'matrix';
+        let matrixCustomColor = '#2ed573';
         let customAudioUrl = null;
         let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
         let totalKm = 0;
+
+        const truckBrandIcons = {
+            "Ford F-MAX": "🚚",
+            "Scania S500": "🚛",
+            "Volvo FH16": "🚜",
+            "Mercedes Actros": "🚐",
+            "DAF XG+": "🚚"
+        };
 
         window.addEventListener('mousemove', e => {
             mouseX = e.clientX;
@@ -417,7 +446,7 @@
         });
 
         const messages = {
-            plateSaved: "License plate updated successfully bro! 🪪",
+            plateSaved: "License plate & truck updated successfully bro! 🪪",
             bgLoaded: "Wallpaper saved (Persistent on F5)! 📺",
             audioLoaded: "Custom music saved to storage and added to radio! 🎵",
             bgRemoved: "Wallpaper removed.",
@@ -446,17 +475,34 @@
 
         function logTerminal(txt) {
             const term = document.getElementById('terminalLogs');
-            term.innerHTML += `<br>> ${txt}`;
-            term.scrollTop = term.scrollHeight;
+            if(term) {
+                term.innerHTML += `<br>> ${txt}`;
+                term.scrollTop = term.scrollHeight;
+            }
+        }
+
+        function updateBrandIcon(model) {
+            const iconBox = document.getElementById('brandIconBox');
+            if(iconBox) {
+                iconBox.innerText = truckBrandIcons[model] || '🚚';
+            }
         }
 
         function savePlate() {
             const val = document.getElementById('plateInput').value.trim();
+            const truck = document.getElementById('truckModelSelect').value;
             if(val) {
                 document.getElementById('headerPlate').innerText = val;
                 localStorage.setItem('tp_custom_plate', val);
-                showToast('plateSaved');
             }
+            localStorage.setItem('tp_truck_model', truck);
+            updateBrandIcon(truck);
+            showToast('plateSaved');
+        }
+
+        function changeTruckModel(val) {
+            localStorage.setItem('tp_truck_model', val);
+            updateBrandIcon(val);
         }
 
         function handleBgImageUpload(input) {
@@ -561,61 +607,113 @@
         resizeCanvas();
 
         const particles = [];
-        for (let i = 0; i < 90; i++) {
+        for (let i = 0; i < 110; i++) {
             particles.push({ 
                 x: Math.random() * canvas.width, 
                 y: Math.random() * canvas.height, 
-                size: Math.random() * 2 + 1.5, 
-                speedY: Math.random() * 2 + 1, 
+                size: Math.random() * 2.5 + 1, 
+                speedY: Math.random() * 2 + 1,
+                speedX: (Math.random() - 0.5) * 1.5,
                 length: Math.random() * 18 + 5,
-                char: String.fromCharCode(0x30A0 + Math.random() * 96)
+                char: String.fromCharCode(0x30A0 + Math.random() * 96),
+                angle: Math.random() * Math.PI * 2,
+                color: '#ff4757'
             });
         }
 
-        function changeAtmosMode(mode) { atmosType = mode; }
+        function changeAtmosMode(mode) { 
+            atmosType = mode; 
+            localStorage.setItem('tp_atmos_mode', mode);
+        }
+
+        function updateMatrixColor(color) {
+            matrixCustomColor = color;
+            localStorage.setItem('tp_matrix_color', color);
+        }
 
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (atmosType !== 'off') {
                 const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#ff4757';
-                ctx.fillStyle = accentColor;
-                ctx.strokeStyle = accentColor;
 
                 particles.forEach(p => {
                     let dx = mouseX - p.x;
                     let dy = mouseY - p.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        p.x += (dx / dist) * 0.8;
-                        p.y += (dy / dist) * 0.8;
+                    if (dist < 160) {
+                        p.x += (dx / dist) * 1.2;
+                        p.y += (dy / dist) * 1.2;
                     }
 
                     p.y += p.speedY * particleSpeed;
+                    if (['shooting', 'snow', 'fireflies', 'plasma'].includes(atmosType)) {
+                        p.x += p.speedX * particleSpeed;
+                    }
+
                     if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.x < 0) p.x = canvas.width;
                     
-                    if (atmosType === 'dots') {
-                        ctx.globalAlpha = 0.5;
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                        ctx.fill();
+                    if (atmosType === 'matrix') {
+                        ctx.globalAlpha = 0.85;
+                        ctx.fillStyle = matrixCustomColor;
+                        ctx.font = '14px monospace';
+                        ctx.fillText(p.char, p.x, p.y);
+                        if(Math.random() < 0.05) {
+                            p.char = String.fromCharCode(0x30A0 + Math.random() * 96);
+                        }
                     } else if (atmosType === 'rain') {
-                        ctx.globalAlpha = 0.4;
+                        ctx.fillStyle = accentColor;
+                        ctx.strokeStyle = accentColor;
+                        ctx.globalAlpha = 0.45;
                         ctx.lineWidth = 1.5;
                         ctx.beginPath();
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(p.x - 1.5, p.y + p.length);
                         ctx.stroke();
-                    } else if (atmosType === 'matrix') {
-                        ctx.globalAlpha = 0.6;
-                        ctx.font = '13px monospace';
-                        ctx.fillText(p.char, p.x, p.y);
-                        if(Math.random() < 0.1) p.char = String.fromCharCode(0x30A0 + Math.random() * 96);
                     } else if (atmosType === 'snow') {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.globalAlpha = 0.75;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size + 1.2, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (atmosType === 'shooting') {
+                        ctx.strokeStyle = '#f1c40f';
+                        ctx.globalAlpha = 0.8;
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p.x - 12, p.y - 12);
+                        ctx.stroke();
+                    } else if (atmosType === 'bubbles') {
+                        ctx.strokeStyle = '#3498db';
+                        ctx.globalAlpha = 0.4;
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size + 2, 0, Math.PI * 2);
+                        ctx.stroke();
+                    } else if (atmosType === 'fireflies') {
+                        ctx.fillStyle = '#f39c12';
                         ctx.globalAlpha = 0.7;
                         ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size + 1.5, 0, Math.PI * 2);
-                        ctx.fillStyle = '#ffffff';
+                        ctx.arc(p.x, p.y, p.size + 0.5, 0, Math.PI * 2);
                         ctx.fill();
+                    } else if (atmosType === 'confetti') {
+                        const colors = ['#e74c3c', '#2ecc71', '#3498db', '#f1c40f', '#9b59b6'];
+                        ctx.fillStyle = colors[Math.floor(p.x) % colors.length];
+                        ctx.globalAlpha = 0.8;
+                        ctx.fillRect(p.x, p.y, 6, 6);
+                    } else if (atmosType === 'plasma') {
+                        ctx.fillStyle = matrixCustomColor;
+                        ctx.globalAlpha = 0.5;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size * 1.5, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (atmosType === 'cybergrid') {
+                        ctx.strokeStyle = matrixCustomColor;
+                        ctx.globalAlpha = 0.3;
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(p.x, p.y, 25, 25);
                     }
                 });
             }
@@ -628,8 +726,10 @@
         let gpsProgress = 0;
 
         function initGpsCanvas() {
-            gpsCanvas.width = gpsCanvas.parentElement.clientWidth;
-            gpsCanvas.height = gpsCanvas.parentElement.clientHeight - 20;
+            if(gpsCanvas && gpsCanvas.parentElement) {
+                gpsCanvas.width = gpsCanvas.parentElement.clientWidth;
+                gpsCanvas.height = gpsCanvas.parentElement.clientHeight - 20;
+            }
         }
         window.addEventListener('resize', initGpsCanvas);
 
@@ -676,10 +776,10 @@
         }
 
         let weatherModes = [
-            { name: "☀️ Sunny (Dry Road)", temp: "26°C", road: "Normal Asphalt (Dry)", wiper: "Off", atmos: "dots" },
+            { name: "☀️ Sunny (Dry Road)", temp: "26°C", road: "Normal Asphalt (Dry)", wiper: "Off", atmos: "matrix" },
             { name: "🌧️ Rainy (Wet Road)", temp: "14°C", road: "Wet & Slippery Surface", wiper: "Active (Medium)", atmos: "rain" },
             { name: "❄️ Snowy & Cold Road", temp: "-2°C", road: "Snowy Surface", wiper: "Slow", atmos: "snow" },
-            { name: "🌫️ Foggy & Low Visibility", temp: "9°C", road: "Damp & Low Visibility", wiper: "Off", atmos: "matrix" }
+            { name: "✨ Shooting Star Night", temp: "12°C", road: "Clear Night Asphalt", wiper: "Off", atmos: "shooting" }
         ];
         let currentWeatherIdx = 0;
 
@@ -729,6 +829,26 @@
             const savedPlate = localStorage.getItem('tp_custom_plate');
             if(savedPlate) { document.getElementById('headerPlate').innerText = savedPlate; document.getElementById('plateInput').value = savedPlate; }
 
+            const savedTruck = localStorage.getItem('tp_truck_model');
+            if(savedTruck) { 
+                document.getElementById('truckModelSelect').value = savedTruck; 
+                updateBrandIcon(savedTruck);
+            } else {
+                updateBrandIcon("Ford F-MAX");
+            }
+
+            const savedAtmos = localStorage.getItem('tp_atmos_mode');
+            if(savedAtmos) {
+                atmosType = savedAtmos;
+                document.getElementById('atmosMode').value = savedAtmos;
+            }
+
+            const savedMatrixColor = localStorage.getItem('tp_matrix_color');
+            if(savedMatrixColor) {
+                matrixCustomColor = savedMatrixColor;
+                document.getElementById('matrixColorPicker').value = savedMatrixColor;
+            }
+
             const savedImg = localStorage.getItem('tp_bg_img');
             if(savedImg) {
                 document.body.style.backgroundImage = `url(${savedImg})`;
@@ -775,17 +895,20 @@
             const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             
             let chosenRoute = routes[Math.floor(Math.random() * routes.length)];
-            document.getElementById('gpsRouteInfo').innerText = `ROUTE: ${chosenRoute.from.toUpperCase()} -> ${chosenRoute.to.toUpperCase()}`;
+            const routeInfoEl = document.getElementById('gpsRouteInfo');
+            if(routeInfoEl) routeInfoEl.innerText = `ROUTE: ${chosenRoute.from.toUpperCase()} -> ${chosenRoute.to.toUpperCase()}`;
 
             logs.unshift({ date: dateStr, route: `${chosenRoute.from} -> ${chosenRoute.to}`, cargo: chosenRoute.cargo, weather: chosenRoute.weather });
             if(logs.length > 5) logs.pop(); 
             localStorage.setItem('tp_driver_logs', JSON.stringify(logs));
 
             const container = document.getElementById('logbookContainer');
-            container.innerHTML = '';
-            logs.forEach(l => {
-                container.innerHTML += `<div>[${l.date}] Route: ${l.route} | Cargo: ${l.cargo} | Weather: ${l.weather}</div>`;
-            });
+            if(container) {
+                container.innerHTML = '';
+                logs.forEach(l => {
+                    container.innerHTML += `<div>[${l.date}] Route: ${l.route} | Cargo: ${l.cargo} | Weather: ${l.weather}</div>`;
+                });
+            }
         }
 
         async function fetchYouTubeVideos() {
@@ -942,6 +1065,7 @@
         let reflexState = 'waiting', startTime, timeoutId;
         function initReflexGame() {
             const c = document.getElementById('reflexCanvas');
+            if(!c) return;
             const ctx = c.getContext('2d');
             ctx.fillStyle = '#ff4757'; 
             ctx.fillRect(0, 0, c.width, c.height);
